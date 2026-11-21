@@ -255,6 +255,67 @@ To achieve an identical interval tolerance of $\tau = 10^{-8}$ over the starting
 
 ---
 
+## 6. End to End Project Flowchart
+
+The following diagram maps the entire workflow of the project, tracing empirical climate observations through mathematical reduction, the Kiefer numerical solver, multi platform execution runtimes, final statistical solutions, and interactive delivery layers:
+
+```mermaid
+flowchart TD
+    subgraph S1["1. Empirical Climate Observation Data"]
+        D1["NOAA Mauna Loa Hawaii Observatory"]
+        D2["65 Continuous Annual Records<br/>From 1959 (315.98 ppm) to 2023 (421.08 ppm)"]
+        D1 --> D2
+    end
+
+    subgraph S2["2. Nonlinear Model and Mathematical Reduction"]
+        M1["Atmospheric Carbon Growth Equation<br/>CO2(t) = C0 + A * exp(r * t)"]
+        M2["Variable Projection Formulation<br/>Separates linear and nonlinear parameters"]
+        M3["Closed Form Normal Equations<br/>Solves baseline C0 and amplitude A for candidate r"]
+        M4["Condensed Unimodal Loss Objective<br/>SSE(r) across uncertainty bracket [0.005, 0.100]"]
+        M1 --> M2 --> M3 --> M4
+    end
+
+    subgraph S3["3. Kiefer 1953 Optimization Lattice"]
+        K1["Initialize Search Bounds and Precision<br/>Interval [a, b] = [0.005, 0.100], Tolerance = 1e-8"]
+        K2["Compute Fibonacci Evaluation Budget<br/>F(N+1) >= (b - a) / tolerance -> N = 37 calls"]
+        K3["Place Symmetric Interior Probe Points<br/>x1, x2 placed at successive Fibonacci ratios"]
+        K4["Execute Minimax Interval Contraction<br/>Point reuse property saves one evaluation per step"]
+        K5["Final Step Perturbation and Convergence<br/>Shrinks uncertainty width to smaller than 1e-8"]
+        K1 --> K2 --> K3 --> K4 --> K5
+    end
+
+    subgraph S4["4. Multi Target Computation Layer"]
+        C1["Native C++17 Core<br/>fibonacci_search.cpp compiled with -O2<br/>Zero external dependencies"]
+        C2["Python 3.12 Backend<br/>FastAPI server.py with REST endpoints<br/>Live streaming for CSV datasets"]
+        C3["Cloudflare Edge Workers<br/>V8 isolate serverless functions<br/>Static hosting on fibopt.pages.dev"]
+    end
+
+    subgraph S5["5. Verified Numerical Solutions"]
+        R1["Optimal Parameter Set<br/>r* = 0.016051 per year<br/>C0 = 255.15 ppm, A = 59.55 ppm"]
+        R2["Accuracy Metrics<br/>RMSE = 0.6874 ppm, R squared = 0.9993"]
+        R3["Climate Forecasting<br/>Doubling time = 43.18 years<br/>2030: 441.3 ppm | 2050: 511.8 ppm"]
+        R1 --> R2 --> R3
+    end
+
+    subgraph S6["6. Interactive Presentation and Exports"]
+        P1["Mistral Style Web Dashboard<br/>Warm cream and amber dark theme"]
+        P2["Chart.js Live Visualizations<br/>Keeling fit, projections, and SSE curve"]
+        P3["1D Bracket Reduction Stepper<br/>Interactive step by step point reuse playback"]
+        P4["Publication PDF Generator<br/>build_pdf.py generates 3 page technical report"]
+        P1 --> P2
+        P1 --> P3
+        P1 --> P4
+    end
+
+    S1 --> S2
+    S2 --> S3
+    S3 --> S4
+    S4 --> S5
+    S5 --> S6
+```
+
+---
+
 ## References
 
 1. Kiefer, J. (1953). Sequential minimax search for a maximum. *Proceedings of the American Mathematical Society*, 4(3), pages 502 to 506.
