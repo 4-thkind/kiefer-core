@@ -1,0 +1,5 @@
+/api/csv/fit.csv /fit.csv 200
+/api/csv/history.csv /history.csv 200
+/api/csv/sse_curve.csv /sse_curve.csv 200
+/pdf /Fibonacci_Optimization_Project_Report.pdf 200
+/report /Fibonacci_Optimization_Project_Report.pdf 200
