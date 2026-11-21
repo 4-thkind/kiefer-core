@@ -6,24 +6,6 @@ Live deployment: [fibopt.pages.dev](https://fibopt.pages.dev)
 
 ---
 
-## Table of Contents
-
-* 1. Project Overview
-* 2. Mathematical Formulation
-  * 2.1 The Fibonacci Search Algorithm
-  * 2.2 Variable Projection Method
-  * 2.3 Unimodal Loss Landscape
-* 3. System Architecture and Flowcharts
-  * 3.1 Algorithmic Interval Reduction Flowchart
-  * 3.2 Runtime Execution Sequence Diagram
-  * 3.3 Full System Architecture
-* 4. Repository Structure and Codebase Breakdown
-* 5. Numerical Results and Benchmark Verification
-* 6. Installation and Execution
-* 7. Cloudflare Pages Deployment
-
----
-
 ## 1. Project Overview
 
 kiefer core is an optimization engine built in C++17 and Python 3.12. It provides an exact, zero dependency implementation of the sequential minimax search method proved by Jack Kiefer in 1953. 
@@ -270,67 +252,6 @@ To achieve an identical interval tolerance of $\tau = 10^{-8}$ over the starting
 * **Uniform Grid Search**: Requires evaluating $M = \frac{0.095}{10^{-8}} + 1 = 9,500,001$ function calls.
 * **Golden Section Search**: Requires $N \approx \frac{\ln(L_0 / \tau)}{\ln(1.61803)} \approx 33$ iterations, totaling 34 function calls.
 * **Fibonacci Search**: Solves the reduction in **37 evaluations** while maintaining the theoretical minimax optimality bound proved by Kiefer.
-
----
-
-## 6. Installation and Execution
-
-### Prerequisites
-
-* C++ compiler supporting C++14 or C++17 (such as GCC, Clang, or MinGW)
-* Python 3.10 or higher
-* Optional: `pip install fastapi uvicorn reportlab matplotlib numpy`
-
-### Method A: One Click Windows Launcher
-
-Run the automated batch script:
-```bat
-.\run.bat
-```
-This script checks the compiler, builds `fibonacci_search.exe` with `-O2` optimizations, executes the binary to produce all CSV files, and launches the FastAPI web dashboard at `http://127.0.0.1:8000`.
-
-### Method B: Native C++ Compilation and Execution
-
-Compile directly using GCC or Clang:
-```bash
-g++ -O2 -std=c++17 -o fibonacci_search.exe fibonacci_search.cpp
-.\fibonacci_search.exe
-```
-
-The executable will run the optimization, print the 37 iteration table to the terminal, and write `history.csv`, `fit.csv`, and `sse_curve.csv` to disk.
-
-### Method C: Python Execution
-
-Execute the standalone Python solver:
-```bash
-python fibonacci_search.py
-```
-
-### Method D: Local FastAPI Server
-
-Start the development web server:
-```bash
-python -m uvicorn server:app --host 127.0.0.1 --port 8000 --reload
-```
-Navigate to `http://127.0.0.1:8000` in any web browser.
-
-### Method E: Standalone Browser Mode
-
-Open `index.html` directly in any modern browser. If the local FastAPI server is not active, `index.html` automatically detects the offline state and switches to its built in JavaScript numerical engine.
-
----
-
-## 7. Cloudflare Pages Deployment
-
-This repository is structured for zero configuration deployment to Cloudflare Pages:
-
-1. Connect the GitHub repository `4-thkind/kiefer-core` to Cloudflare Pages.
-2. Leave the build command empty for static assets.
-3. Set the build output directory to the repository root directory (`/`).
-4. The included `_headers` file configures caching and security headers.
-5. The included `functions/api/` directory automatically routes `/api/optimize` and `/api/run-cpp` to edge workers.
-
-Live production URL: [https://fibopt.pages.dev](https://fibopt.pages.dev)
 
 ---
 
